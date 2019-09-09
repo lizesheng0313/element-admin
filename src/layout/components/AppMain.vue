@@ -23,6 +23,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fade-transform-enter-active, .fade-transform-leave-active {
+  transition: opacity .1s ease;
+}
+.fade-transform-enter, .fade-transform-leave-to
+/* .fade-transform-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+}
+
 .app-main {
   /* 50= navbar  50  */
   min-height: calc(100vh - 50px);
@@ -56,4 +64,5 @@ export default {
     padding-right: 15px;
   }
 }
+
 </style>

@@ -395,7 +395,82 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  {
+    path: '/sys_management',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: '系统管理', icon: 'theme' }
+      }
+    ]
+  },
+  {
+    path: '/customer_management',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: '客服管理', icon: 'theme' }
+      }
+    ]
+  },
+  {
+    path: '/customer_management',
+    component: Layout,
+    redirect: '/customer_management/vip',
+    alwaysShow: true,
+    name: 'customer',
+    meta: { title: '客户管理', icon: 'zip' },
+    children: [
+      {
+        path: 'vip',
+        component: () => import('@/views/customer/index'),
+        name: 'vip',
+        meta: { title: '会员管理' }
+      }
+    ]
+  },
+  {
+    path: '/trading_management',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: '交易管理', icon: 'theme' }
+      }
+    ]
+  },
+  {
+    path: '/activity_management',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: '活动管理', icon: 'theme' }
+      }
+    ]
+  },
+  {
+    path: '/data_management',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: '大数据', icon: 'theme' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
