@@ -1,11 +1,15 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
-        <h3 class="title">
-          {{ $t('login.title') }}
-        </h3>
+        <h3 class="title">{{ $t('login.title') }}</h3>
         <lang-select class="set-language" />
       </div>
 
@@ -16,7 +20,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          :placeholder="$t('login.username')"
+          :placeholder="$t('请输入用户名')"
           name="username"
           type="text"
           tabindex="1"
@@ -34,7 +38,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            :placeholder="$t('login.password')"
+            :placeholder="$t('请输入密码')"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -48,9 +52,36 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-        {{ $t('login.logIn') }}
-      </el-button>
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+        <el-form-item prop="safecode">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            :key="safecodeType"
+            ref="safecode"
+            v-model="loginForm.safecode"
+            :type="safecodeType"
+            :placeholder="$t('请输入安全码')"
+            name="safecode"
+            tabindex="2"
+            autocomplete="on"
+            @keyup.native="checkCapslock"
+            @blur="capsTooltip = false"
+            @keyup.enter.native="handleLogin"
+          />
+          <span class="show-pwd" @click="showsafecode">
+            <svg-icon :icon-class="safecodeType === 'safecode' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
+
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >{{ $t('login.logIn') }}</el-button>
 
       <div style="position:relative">
         <div class="tips">
@@ -58,15 +89,15 @@
           <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
         </div>
         <div class="tips">
-          <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
-          </span>
+          <span style="margin-right:18px;">{{ $t('login.username') }} : editor</span>
           <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
         </div>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          {{ $t('login.thirdparty') }}
-        </el-button>
+        <el-button
+          class="thirdparty-button"
+          type="primary"
+          @click="showDialog=true"
+        >{{ $t('login.thirdparty') }}</el-button>
       </div>
     </el-form>
 
@@ -81,6 +112,7 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './components/SocialSignin'
@@ -91,28 +123,44 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback()
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('请输入6位以上的正确密码'))
+      } else {
+        callback()
+      }
+    }
+    const validateSafecode = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('请输入6位的安全码'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: '',
+        safecode: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ],
+        safecode: [
+          { required: true, trigger: 'blur', validator: validateSafecode }
+        ]
       },
       passwordType: 'password',
+      safecodeType: 'safecode',
       capsTooltip: false,
       loading: false,
       showDialog: false,
@@ -140,6 +188,8 @@ export default {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
+    } else if (this.loginForm.safecode === '') {
+      this.$refs.safecode.focus()
     }
   },
   destroyed() {
@@ -148,7 +198,10 @@ export default {
   methods: {
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
+        if (
+          (shiftKey && (key >= 'a' && key <= 'z')) ||
+          (!shiftKey && (key >= 'A' && key <= 'Z'))
+        ) {
           this.capsTooltip = true
         } else {
           this.capsTooltip = false
@@ -168,14 +221,31 @@ export default {
         this.$refs.password.focus()
       })
     },
+    showsafecode() {
+      if (this.safecodeType === 'safecode') {
+        this.safecodeType = ''
+      } else {
+        this.safecodeType = 'safecode'
+      }
+      this.$nextTick(() => {
+        this.$refs.safecode.focus()
+      })
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+          this.$store
+            .dispatch('user/login', this.loginForm)
+            .then(res => {
+              if (res.code == 20000) {
+                console.log(this.redirect, this.otherQuery)
+                this.$router.push({
+                  path: this.redirect || '/',
+                  query: this.otherQuery
+                })
+                this.loading = false
+              }
             })
             .catch(() => {
               this.loading = false
@@ -220,8 +290,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -264,9 +334,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
@@ -334,6 +404,15 @@ $light_gray:#eee;
     user-select: none;
   }
 
+  .show-safecode {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+    user-select: none;
+  }
   .thirdparty-button {
     position: absolute;
     right: 0;
