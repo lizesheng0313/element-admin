@@ -16,6 +16,7 @@
 
       <el-input
         v-model="listQuery.username"
+        prefix-icon="el-icon-search"
         :placeholder="$t('请输入用户名')"
         style="width: 130px;"
         class="filter-item"
@@ -141,17 +142,21 @@
         align="center"
         width="80"
       />
-      <el-table-column :label="$t('账号')" align="center" prop="username" />
-      <el-table-column :label="$t('姓名')" width="80px" align="center" prop="userbankname">
+      
+      <el-table-column :label="$t('账号')" width="120px" align="center" prop="islock">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.userbankname }}</span>
+          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.islock}}</span>
         </template>
       </el-table-column>
+
+      <el-table-column :label="$t('姓名')" width="100px" align="center" prop="userbankname"/>
+
       <el-table-column :label="$t('金额')" align="center" prop="balance">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
+
       <el-table-column :label="$t('组号')" align="center" prop="zuhao" />
       <el-table-column :label="$t('上级分组')" align="center" prop="shangjifenzu" />
       <el-table-column :label="$t('总绩')" align="center" prop="zongji" />
@@ -159,7 +164,7 @@
       <el-table-column :label="$t('业绩返佣')" width="80px" align="center" prop="yejifanyong" />
       <el-table-column
         :label="$t('欠缺业绩')"
-        width="80px"
+        width="100px"
         align="center"
         style="color:red"
         prop="qianqueyeji"
@@ -212,51 +217,89 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="400px" center="true" size="mini">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left:50px;"
+        label-position="right"
+        label-width="20%"
+        
+    
       >
-        <el-form-item label="锁定" prop="islock">
-          <el-switch v-model="temp.islock" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="userbankname">
-          <el-input v-model="temp.userbankname" />
-        </el-form-item>
-        <el-form-item label="组号" prop="zuhao">
-          <el-input v-model="temp.zuhao" />
-        </el-form-item>
-        <el-form-item label="返佣" prop="fanyong">
-          <el-input v-model="temp.fanyong" />
-        </el-form-item>
-        <el-form-item label="业绩返佣" prop="yejifanyong">
-          <el-input v-model="temp.yejifanyong" />
-        </el-form-item>
-        <el-form-item label="业绩返佣" prop="yejifanyong">
-          <el-input v-model="temp.yejifanyong" />
-        </el-form-item>
-        <el-form-item label="总绩" prop="zongji">
-          <el-input v-model="temp.zongji" />
-        </el-form-item>
-        <el-form-item label="欠缺业绩" prop="qianqueyeji">
-          <el-input v-model="temp.qianqueyeji" />
-        </el-form-item>
-        <el-form-item label="QQ" prop="qq">
-          <el-input v-model="temp.qq" />
-        </el-form-item>
-        <el-form-item label="电话" prop="tel">
-          <el-input v-model="temp.tel" />
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="temp.tel" />
-        </el-form-item>
-        <el-form-item label="电话" prop="tradepassword">
-          <el-input v-model="temp.tel" />
-        </el-form-item>
+      <template>
+          <el-tabs v-model="edittapname" type="card" >
+                <el-tab-pane label="基本资料" name="first">
+
+                  <el-form-item label="账号 :" prop="username"  size="mini">
+                    <el-input v-model="temp.username" :disabled="true" />
+                  </el-form-item>
+                  <el-form-item label="姓名 :" prop="userbankname">
+                    <el-input v-model="temp.userbankname" />
+                  </el-form-item>
+                  <el-form-item label="组号 :" prop="zuhao">
+                    <el-input v-model="temp.zuhao" />
+                  </el-form-item>
+                  <el-form-item label="电话 :" prop="tel">
+                    <el-input v-model="temp.tel" />
+                  </el-form-item>
+                  <el-form-item label="QQ :" prop="qq">
+                    <el-input v-model="temp.qq" />
+                  </el-form-item>
+
+                  <el-timeline>
+                    <el-timeline-item>
+                    注册IP为 ：<span>{{ temp.regip }}</span>
+                    </el-timeline-item>
+                    <el-timeline-item>
+                    注册时间 ：<span>{{ temp.regtime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                    </el-timeline-item>
+                    <el-timeline-item>
+                    最后登录 ：<span>{{ temp.logintime  | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                    </el-timeline-item>
+                    </el-timeline>
+                  </el-tab-pane>
+
+               <el-tab-pane label="账户信息" name="second">
+
+                  <el-form-item label="总绩 :" prop="zongji">
+                    <el-input v-model="temp.zongji" />
+                  </el-form-item>
+                  <el-form-item label="返佣1 :" prop="fanyong">
+                    <el-input v-model="temp.fanyong" />
+                  </el-form-item>
+                  <el-form-item label="返佣2 :" prop="yejifanyong">
+                    <el-input v-model="temp.yejifanyong" />
+                  </el-form-item>
+                  <el-form-item label="欠缺 :" prop="qianqueyeji">
+                    <el-input v-model="temp.qianqueyeji" />
+                  </el-form-item>
+                  <el-form-item label="密码 :" prop="password">
+                    <el-input v-model="temp.tel" />
+                  </el-form-item>
+                  <el-form-item label="电话 :" prop="tradepassword">
+                    <el-input v-model="temp.tel" />
+                  </el-form-item>
+                  <!-- <el-form-item label="锁定 :" prop="islock">
+                    <el-switch v-model="temp.islock" />
+                  </el-form-item> -->
+
+
+                  <el-radio-group v-model="temp.islock">
+                    <el-radio-button :label="0">正常</el-radio-button>
+                    <el-radio-button :label="1">锁定</el-radio-button>
+                  </el-radio-group> 
+
+                </el-tab-pane>
+
+               <el-tab-pane label="所有上组" name="third">
+                  <el-form-item label="暂空 :" prop="zongji">
+                    <el-input v-model="temp.zongji" />
+                  </el-form-item>
+                </el-tab-pane>
+
+           </el-tabs>
+       </template>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
@@ -327,6 +370,9 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      edittapname: 'first',
+      
+
       listQuery: {
         checktype: '',
         username: '',
@@ -359,7 +405,7 @@ export default {
       showReviewer: false,
       showlogintime: false,
       temp: {
-        islock: '',
+        islock: '0',
         id: '',
         zuhao: 1,
         fanyong: '',
@@ -373,7 +419,7 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: 'Edit',
+        update: '编辑用户',
         create: 'Create'
       },
       dialogPvVisible: false,
@@ -436,17 +482,17 @@ export default {
       }
       this.handleFilter()
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
-    },
+    // resetTemp() {
+    //   this.temp = {
+    //     id: undefined,
+    //     importance: 1,
+    //     remark: '',
+    //     timestamp: new Date(),
+    //     title: '',
+    //     status: 'published',
+    //     type: ''
+    //   }
+    // },
     collatingFormData(formData) {
       const copyFormData = JSON.parse(JSON.stringify(formData))
       console.log(copyFormData)
@@ -454,34 +500,36 @@ export default {
       copyFormData['endTime'] = copyFormData.countTime[1] || ''
       return copyFormData
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
+    // handleCreate() {
+    //   this.resetTemp()
+    //   this.dialogStatus = 'create'
+    //   this.dialogFormVisible = true
+    //   this.$nextTick(() => {
+    //     this.$refs['dataForm'].clearValidate()
+    //   })
+    // },
+    // createData() {
+    //   this.$refs['dataForm'].validate(valid => {
+    //     if (valid) {
+    //       this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+    //       this.temp.author = 'vue-element-admin'
+    //       createArticle(this.temp).then(() => {
+    //         this.list.unshift(this.temp)
+    //         this.dialogFormVisible = false
+    //         this.$notify({
+    //           title: '成功',
+    //           message: '创建成功',
+    //           type: 'success',
+    //           duration: 2000
+    //         })
+    //       })
+    //     }
+    //   })
+    // },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      console.log(row);
+      this.temp = row;
+      console.log(this.temp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
