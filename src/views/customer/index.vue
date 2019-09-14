@@ -102,19 +102,6 @@
       />
 
       <el-button v-waves class="filter-item" type="primary" @click="handleFilter">{{ $t('查询') }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        @click="handleCreate"
-      >{{ $t('添加') }}</el-button>
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        @click="handleDownload"
-      >{{ $t('导出') }}</el-button>
 
       <el-checkbox
         v-model="showlogintime"
@@ -128,12 +115,13 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      border
       fit
       highlight-current-row
       style="width: 100%;"
       height="630"
       @sort-change="sortChange"
+      size="mini"
+      :header-cell-style="{color:'#606266'}"
     >
       <el-table-column
         :label="$t('table.id')"
@@ -143,25 +131,30 @@
         width="80"
       />
       
-      <el-table-column :label="$t('账号')" width="120px" align="center" prop="islock">
+      <el-table-column :label="$t('账号')" width="130px" align="center" prop="islock">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.islock}}</span>
+          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.username}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="$t('姓名')" width="100px" align="center" prop="userbankname"/>
+      <el-table-column :label="$t('姓名')" width="130px" align="center" prop="userbankname"/>
 
-      <el-table-column :label="$t('金额')" align="center" prop="balance">
+      <el-table-column :label="$t('金额')" width="130px" align="center" prop="balance">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column :label="$t('组号')" align="center" prop="zuhao" />
+   
+      <el-table-column :label="$t('组号')"  align="center" prop="zuhao"  >
+        <template slot-scope="{row}">
+          <el-tag type="danger">{{ row.zuhao }}</el-tag>
+        </template>
+      </el-table-column>
+      
       <el-table-column :label="$t('上级分组')" align="center" prop="shangjifenzu" />
       <el-table-column :label="$t('总绩')" align="center" prop="zongji" />
-      <el-table-column :label="$t('返佣')" width="80px" align="center" prop="fanyong" />
-      <el-table-column :label="$t('业绩返佣')" width="80px" align="center" prop="yejifanyong" />
+      <el-table-column :label="$t('返佣')" align="center" prop="fanyong" />
+      <el-table-column :label="$t('业绩返佣')"  align="center" prop="yejifanyong" />
       <el-table-column
         :label="$t('欠缺业绩')"
         width="100px"
@@ -169,44 +162,57 @@
         style="color:red"
         prop="qianqueyeji"
       />
-      <el-table-column :label="$t('设备')" width="80px" align="center" prop="loginsource" />
-      <el-table-column :label="$t('注册时间')" align="center" prop="regtime">
+      <el-table-column :label="$t('设备')"  align="center" prop="loginsource" />
+      <el-table-column :label="$t('注册时间')" width="130px" align="center" prop="regtime">
         <template slot-scope="scope">
           <span>{{ scope.row.regtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showlogintime" :label="$t('登录时间')" align="center" prop="onlinetime">
+      <el-table-column v-if="showlogintime" :label="$t('登录时间')"  width="130px" align="center" prop="onlinetime">
         <template slot-scope="scope">
           <span>{{ scope.row.onlinetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
+
+
+      <!--功能操作栏目--开始-->
       <el-table-column
         :label="$t('table.actions')"
         align="center"
-        width="230"
+        width="280"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('编辑') }}</el-button>
-          <el-button
+          <el-button-group >
+            <el-button  @click="handleUpdate(row)">编辑</el-button>
+            <el-button  @click="handleUpdate(row)">资料</el-button>
+            <el-button  @click="handleUpdate(row)">记录</el-button>
+            <el-button  @click="handleUpdate(row)">维护</el-button>
+          </el-button-group>
+
+
+          
+          <!--<el-button
             v-if="row.status!='published'"
             size="mini"
             type="success"
             @click="handleModifyStatus(row,'published')"
-          >{{ $t('table.publish') }}</el-button>
+          >{{ $t('table.publish') }}</el-button>-->
           <!-- <el-button
             v-if="row.status!='draft'"
             size="mini"
             @click="handleModifyStatus(row,'draft')"
           >{{ $t('table.draft') }}</el-button> -->
-          <el-button
+          <!--<el-button
             v-if="row.status!='deleted'"
             size="mini"
             type="danger"
             @click="handleModifyStatus(row,'deleted')"
-          >{{ $t('table.delete') }}</el-button>
+          >{{ $t('table.delete') }}</el-button>-->
         </template>
       </el-table-column>
+      <!--功能操作栏目--结束-->
+
     </el-table>
 
     <pagination
@@ -248,13 +254,13 @@
                   </el-form-item>
 
                   <el-timeline>
-                    <el-timeline-item>
+                    <el-timeline-item icon="el-icon-people" color="#005AB5">
                     注册IP为 ：<span>{{ temp.regip }}</span>
                     </el-timeline-item>
                     <el-timeline-item>
                     注册时间 ：<span>{{ temp.regtime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
                     </el-timeline-item>
-                    <el-timeline-item>
+                    <el-timeline-item icon="el-icon-people" color="#ACD6FF">
                     最后登录 ：<span>{{ temp.logintime  | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
                     </el-timeline-item>
                     </el-timeline>
@@ -301,6 +307,7 @@
            </el-tabs>
        </template>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
         <el-button

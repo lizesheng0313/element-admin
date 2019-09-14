@@ -4,16 +4,17 @@
       <el-input
         v-model="listQuery.username"
         prefix-icon="el-icon-search"
-        :placeholder="$t('用户账号')"
+        :placeholder="$t('管理账号搜索')"
         style="width: 130px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
 
       <el-input
-        v-model="listQuery.name"
-        :placeholder="$t('会员账号搜索')"
-        style="width: 100px;"
+        v-model="listQuery.membername"
+        prefix-icon="el-icon-search"
+        :placeholder="$t('用户账号搜索')"
+        style="width: 130px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
@@ -31,12 +32,21 @@
       style="width: 100%;"
       height="630"
       @sort-change="sortChange"
+      :header-cell-style="{color:'#606266'}"
     >
      
-
-      <el-table-column :label="$t('用户账号')" align="center" prop="userbankname" />
-      <el-table-column :label="$t('操作类型')" align="center" prop="zuhao" />
-      <el-table-column :label="$t('用户IP')" align="center" prop="shangjifenzu" />
+     
+        <el-table-column :label="$t('序号')"      align="center"  width="80" prop="userbankname" />
+        <el-table-column :label="$t('管理账号')"  align="center" width="130" prop="username" />
+        <el-table-column :label="$t('用户账号')"  align="center" width="130" prop="membername" />
+        <el-table-column :label="$t('操作类型')"  align="center"  width="130" prop="type" />
+        <el-table-column :label="$t('操作信息')"  align="center" prop="info"  />
+        <el-table-column :label="$t('操作IP')"   align="center"  prop="ip" />
+        <el-table-column :label="$t('操作时间')"  align="center" prop="ip" >.
+            <template slot-scope="scope">
+              <span>{{ list.row.time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            </template>
+        </el-table-column>
     </el-table>
 
     <pagination
