@@ -1,38 +1,41 @@
 import request from '@/utils/request'
 
-export function getRoutes() {
+export function getRoleList() {
   return request({
-    url: '/routes',
-    method: 'get'
+    url: '/index/adminrole/listinfo',
+    method: 'post',
   })
 }
 
-export function getRoles() {
+export function apiRoleEdit(data) {
   return request({
-    url: '/roles',
-    method: 'get'
-  })
-}
-
-export function addRole(data) {
-  return request({
-    url: '/role',
+    url: '/index/adminrole/edit',
     method: 'post',
     data
   })
 }
 
-export function updateRole(id, data) {
+export function apiRuleAdd(data) {
   return request({
-    url: `/role/${id}`,
-    method: 'put',
+    url: '/index/adminrole/add',
+    method: 'post',
     data
   })
 }
 
-export function deleteRole(id) {
+export function apiRuleRead(data) {
   return request({
-    url: `/role/${id}`,
-    method: 'delete'
+    url: '/index/adminrole/read',
+    method: 'post',
+    data
   })
 }
+
+export function apiAdminlog(data) {
+  return request({
+    url: '/index/adminlog',
+    method: 'post',
+    data
+  })
+}
+

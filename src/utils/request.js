@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -42,9 +42,14 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
+      if (res.code === 50008) {
+        alert("token")
+        store.commit('user/SET_TOKEN', '')
+        store.commit('user/SET_ROLES', [])
+        removeToken()
+      }
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -65,7 +70,8 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(new Error(res.message || 'Error'))
-    } else {
+    }
+    else {
       return res
     }
   },
