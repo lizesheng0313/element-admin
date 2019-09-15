@@ -1,4 +1,4 @@
-import { getRoleList, apiRoleEdit,apiRuleAdd,apiRuleRead,apiAdminlog} from '@/api/role'
+import { getRoleList, apiRoleEdit, apiRuleAdd, apiRuleRead, apiAdminlog, apiAdminlist, apiAdminedit, apiAdminrolelist, apiAdminadd,apiSettingRead,apiSettingEdit } from '@/api/role'
 
 const state = {
 }
@@ -18,7 +18,7 @@ const actions = {
             })
         })
     },
-    actionRoleEdit({commit},data) {
+    actionRoleEdit({ commit }, data) {
         return new Promise((resolve, reject) => {
             apiRoleEdit(data).then(response => {
                 resolve(response)
@@ -27,7 +27,7 @@ const actions = {
             })
         })
     },
-    actionRuleAdd({commit},data) {
+    actionRuleAdd({ commit }, data) {
         return new Promise((resolve, reject) => {
             apiRuleAdd(data).then(response => {
                 resolve(response)
@@ -36,7 +36,7 @@ const actions = {
             })
         })
     },
-    actionRuleRead({commit},data) {
+    actionRuleRead({ commit }, data) {
         return new Promise((resolve, reject) => {
             apiRuleRead(data).then(response => {
                 resolve(response)
@@ -45,7 +45,7 @@ const actions = {
             })
         })
     },
-    actionAdminlog({commit},data) {
+    actionAdminlog({ commit }, data) {
         return new Promise((resolve, reject) => {
             apiAdminlog(data).then(response => {
                 resolve(response)
@@ -54,6 +54,61 @@ const actions = {
             })
         })
     },
+    actionAdminlis({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiAdminlist(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionAdminedit({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiAdminedit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionAdminrolelist({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiAdminrolelist(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionAdminadd({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiAdminadd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionSettingRead({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiSettingRead(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionSettingEdit({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiSettingEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
 }
 
 export default {

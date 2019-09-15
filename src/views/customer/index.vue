@@ -191,7 +191,7 @@
           <el-button-group>
             <el-button @click="handleUpdate(row)">编辑</el-button>
           </el-button-group>
-          <el-dropdown  style="margin-left:5px;position:relative:top:3px">
+          <el-dropdown style="margin-left:5px;position:relative:top:3px">
             <span class="el-dropdown-link">
               更多
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -493,50 +493,14 @@ export default {
       }
       this.handleFilter();
     },
-    // resetTemp() {
-    //   this.temp = {
-    //     id: undefined,
-    //     importance: 1,
-    //     remark: '',
-    //     timestamp: new Date(),
-    //     title: '',
-    //     status: 'published',
-    //     type: ''
-    //   }
-    // },
+
     collatingFormData(formData) {
       const copyFormData = JSON.parse(JSON.stringify(formData));
-      console.log(copyFormData);
       copyFormData["startTime"] = copyFormData.countTime[0] || "";
       copyFormData["endTime"] = copyFormData.countTime[1] || "";
       return copyFormData;
     },
-    // handleCreate() {
-    //   this.resetTemp()
-    //   this.dialogStatus = 'create'
-    //   this.dialogFormVisible = true
-    //   this.$nextTick(() => {
-    //     this.$refs['dataForm'].clearValidate()
-    //   })
-    // },
-    // createData() {
-    //   this.$refs['dataForm'].validate(valid => {
-    //     if (valid) {
-    //       this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-    //       this.temp.author = 'vue-element-admin'
-    //       createArticle(this.temp).then(() => {
-    //         this.list.unshift(this.temp)
-    //         this.dialogFormVisible = false
-    //         this.$notify({
-    //           title: '成功',
-    //           message: '创建成功',
-    //           type: 'success',
-    //           duration: 2000
-    //         })
-    //       })
-    //     }
-    //   })
-    // },
+
     handleUpdate(row) {
       console.log(row);
       this.temp = row;

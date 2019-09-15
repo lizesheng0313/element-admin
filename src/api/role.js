@@ -39,3 +39,53 @@ export function apiAdminlog(data) {
   })
 }
 
+export function apiAdminlist(data) {
+  return request({
+    url: '/index/admin/adminlist',
+    method: 'post',
+    data
+  })
+}
+
+export function apiAdminedit(data) {
+  return request({
+    url: '/index/admin/adminedit',
+    method: 'post',
+    data
+  })
+}
+
+export function apiAdminrolelist(data) {
+  return request({
+    url: '/index/admin/adminrolelist',
+    method: 'post',
+    data
+  })
+}
+
+export function apiAdminadd(data) {
+  return request({
+    url: '/index/admin/adminadd',
+    method: 'post',
+    data
+  })
+}
+
+export function apiSettingRead(data) {
+  return request({
+    url: '/index/setting/read',
+    method: 'post',
+    data
+  })
+}
+
+export function apiSettingEdit(data) {
+  return request({
+    url: '/index/setting/edit',
+    method: 'post',
+    data
+  })
+}
+
+
+

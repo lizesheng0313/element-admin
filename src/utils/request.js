@@ -2,6 +2,10 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken, removeToken } from '@/utils/auth'
+import Vue from 'vue'
+import Router from 'vue-router'
+
+Vue.use(Router)
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -44,11 +48,11 @@ service.interceptors.response.use(
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
-      if (res.code === 50008) {
-        alert("token")
+      if (res.code === "50008") {
         store.commit('user/SET_TOKEN', '')
         store.commit('user/SET_ROLES', [])
         removeToken()
+        Router.push("/login")
       }
       Message({
         message: res.message || 'Error',

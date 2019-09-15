@@ -79,7 +79,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', affix: true }
+        meta: { title: 'dashboard', affix: true,icon:'zip' }
       }
     ]
   },
@@ -401,7 +401,7 @@ export const constantRoutes = [
     redirect: '/sys_management/user_roles',
     alwaysShow: true,
     name: 'sys_management',
-    meta: { title: '系统管理' },
+    meta: { title: '系统管理',icon:'zip'},
     children: [
       {
         path: 'user_roles',
@@ -414,6 +414,18 @@ export const constantRoutes = [
         component: () => import('@/views/system/adminLog'),
         name: 'admin_log',
         meta: { title: '管理日志' }
+      },
+      {
+        path: 'admin',
+        component: () => import('@/views/system/admin'),
+        name: 'admin',
+        meta: { title: '管理员' }
+      },
+      {
+        path: 'setting',
+        component: () => import('@/views/system/setting'),
+        name: 'setting',
+        meta: { title: '系统设置' }
       }
     ]
   },
@@ -425,7 +437,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/i18n-demo/index'),
         name: 'I18n',
-        meta: { title: '客服管理'}
+        meta: { title: '客服管理',icon:'zip' }
       }
     ]
   },
@@ -435,7 +447,7 @@ export const constantRoutes = [
     redirect: '/customer_management/vip',
     alwaysShow: true,
     name: 'customer',
-    meta: { title: '客户管理' },
+    meta: { title: '客户管理' ,icon:'zip'},
     children: [
       {
         path: 'vip',
@@ -453,7 +465,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/i18n-demo/index'),
         name: 'I18n',
-        meta: { title: '交易管理'}
+        meta: { title: '交易管理',icon:'zip' }
       }
     ]
   },
@@ -465,7 +477,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/i18n-demo/index'),
         name: 'I18n',
-        meta: { title: '活动管理'}
+        meta: { title: '活动管理',icon:'zip' }
       }
     ]
   },
@@ -477,7 +489,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/i18n-demo/index'),
         name: 'I18n',
-        meta: { title: '大数据'}
+        meta: { title: '大数据' ,icon:'zip'}
       }
     ]
   },
