@@ -460,12 +460,15 @@ export const constantRoutes = [
   {
     path: '/trading_management',
     component: Layout,
+    alwaysShow: true,
+    name: 'trading_management',
+    meta: { title: '交易管理' ,icon:'zip'},
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/i18n-demo/index'),
-        name: 'I18n',
-        meta: { title: '交易管理',icon:'zip' }
+        path: 'target_center',
+        component: () => import('@/views/trading/target_center'),
+        name: 'target_center',
+        meta: { title: '指标订单',icon:'zip' }
       }
     ]
   },

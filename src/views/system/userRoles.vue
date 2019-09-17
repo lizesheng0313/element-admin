@@ -4,6 +4,7 @@
 
     <el-table
       :data="rolesList"
+       v-loading="listLoading"
       style="width: 100%;margin-top:30px;"
       border
       :header-cell-style="{background:'#eef1f6',color:'#606266'}"
@@ -68,6 +69,7 @@ import { parseTime } from "@/utils";
 export default {
   data() {
     return {
+      listLoading: true,
       newrole: {},
       role: {},
       routes: [],
@@ -87,7 +89,9 @@ export default {
   },
   methods: {
     getList() {
+      this.listLoading = true;
       this.$store.dispatch("system/getRoleList").then(res => {
+        this.listLoading = false;
         this.rolesList = res.data;
       });
     },

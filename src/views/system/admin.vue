@@ -22,61 +22,46 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
+      border
       fit
       highlight-current-row
       style="width: 100%;"
-      height="630"
+      height="600"
       size="mini"
       :header-cell-style="{color:'#606266'}"
     >
-      <el-table-column
-        :label="$t('table.id')"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-      />
-      <el-table-column :label="$t('用户名')" width="130px" align="center" prop="username">
+
+      <el-table-column :label="$t('管理账号')"  align="center" prop="username">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('姓名')" width="130px" align="center" prop="tip">
+      <el-table-column :label="$t('备注')"  align="center" prop="tip">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.tip }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('登陆IP')" width="130px" align="center" prop="loginip"></el-table-column>
-      <el-table-column :label="$t('登陆地区')" align="center" prop="iparea"></el-table-column>
       <el-table-column :label="$t('角色名称')" align="center" prop="role_name" />
-      <el-table-column :label="$t('角色ID')" align="center" prop="role_id" />
-      <el-table-column :label="$t('登录时间')" width="130px" align="center" prop="logintime">
+      <el-table-column :label="$t('最后登陆IP')"  align="center" prop="loginip"></el-table-column>
+      <el-table-column :label="$t('最后登陆地区')" align="center" prop="iparea"></el-table-column>
+      <!--<el-table-column :label="$t('角色ID')" align="center" prop="role_id" />-->
+      <el-table-column :label="$t('最后登录时间')"  align="center" prop="logintime">
         <template slot-scope="scope">
-          <span>{{ scope.row.onlinelogintimetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.logintime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
+
       <!--功能操作栏目--开始-->
       <el-table-column
-        :label="$t('table.actions')"
+        :label="$t('操作')"
         align="center"
-        width="300"
+        width="100"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
           <el-button-group>
             <el-button @click="handleUpdate(row)">编辑</el-button>
           </el-button-group>
-          <el-dropdown style="margin-left:5px;position:relative:top:3px">
-            <span class="el-dropdown-link">
-              更多
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click="handleUpdate(row)">资料</el-dropdown-item>
-              <el-dropdown-item @click="handleUpdate(row)">记录</el-dropdown-item>
-              <el-dropdown-item @click="handleUpdate(row)">维护</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -98,20 +83,20 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="20%">
         <template>
           <el-tabs v-model="edittapname" type="card">
-            <el-form-item label="管理账号:" prop>
-              <el-input v-model="temp.username" :disabled="dialogStatus != 'add'" />
+            <el-form-item label="管理账号 :" prop>
+              <el-input v-model="temp.username" :disabled="dialogStatus != 'add'" placeholder="只能为数字或字母，新增后不可修改" />
             </el-form-item>
             <el-form-item label="登录密码 :" prop="password">
-              <el-input v-model="temp.password" type="password" />
+              <el-input v-model="temp.password" type="password" placeholder="密码长度为6-12位字符" />
             </el-form-item>
             <el-form-item label="安全码 :" prop="safecode">
-              <el-input v-model="temp.safecode" type="password" />/>
+              <el-input v-model="temp.safecode" type="password" placeholder="安全码长度为6-12数字" />
             </el-form-item>
-            <el-form-item label="用户姓名 :" prop="tip">
-              <el-input v-model="temp.tip" />
+            <el-form-item label="用户姓名 :" prop="tip" >
+              <el-input v-model="temp.tip" placeholder="可选项" />
             </el-form-item>
             <el-form-item label="用户选择 :">
-              <el-select v-model="temp.role_id" placeholder="请选择">
+              <el-select v-model="temp.role_id" placeholder="请选择对应角色">
                 <el-option
                   v-for="item in roleNameList"
                   :key="item.role_id"
@@ -120,7 +105,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-radio-group v-model="temp.islock">
+            <el-radio-group v-model="temp.islock" >
               <el-radio-button :label="0">正常</el-radio-button>
               <el-radio-button :label="1">锁定</el-radio-button>
             </el-radio-group>
@@ -129,11 +114,11 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('取消') }}</el-button>
         <el-button
           type="primary"
           @click="dialogStatus==='add'?addData():updateData()"
-        >{{ $t('table.confirm') }}</el-button>
+        >{{ $t('确定') }}</el-button>
       </div>
     </el-dialog>
 
@@ -143,7 +128,7 @@
         <el-table-column prop="pv" label="Pv" />
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
+        <el-button type="primary" @click="dialogPvVisible = false">{{ $t('确定') }}</el-button>
       </span>
     </el-dialog>
   </div>

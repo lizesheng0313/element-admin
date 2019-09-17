@@ -44,9 +44,9 @@ module.exports = {
       //   }
       // }
       '/index': {
-        target: "http://124.156.101.85:1001",
-        secure: false,
-        changeOrigin: false,
+        target: "http://47.254.80.9",
+        // secure: false,
+        // changeOrigin: false,
         // pathRewrite: {
         //   '^/': ''   //需要rewrite的
         // }  `
