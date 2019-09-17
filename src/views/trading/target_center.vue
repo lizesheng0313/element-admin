@@ -4,7 +4,7 @@
     <div class="filter-container">
       <el-select
         v-model="listQuery.updatedtime"
-        :placeholder="$t('更新')"
+        placeholder="更新"
         style="width: 75px"
         class="filter-item"
       >
@@ -14,13 +14,8 @@
         <el-option label="静止" value="0" />
       </el-select>
 
-      <el-select
-        v-model="listQuery.state"
-        :placeholder="$t('状态')"
-        style="width: 93px"
-        class="filter-item"
-      >
-        <el-option label="全部" value="" />
+      <el-select v-model="listQuery.state" placeholder="状态" style="width: 93px" class="filter-item">
+        <el-option label="全部" value />
         <el-option label="未审核" value="0" />
         <el-option label="已审核" value="1" />
         <el-option label="已取消" value="-1" />
@@ -28,11 +23,11 @@
 
       <el-select
         v-model="listQuery.sdtype"
-        :placeholder="$t('审核方式')"
+        placeholder="审核方式"
         style="width: 100px"
         class="filter-item"
       >
-        <el-option label="全部方式" value="" />
+        <el-option label="全部方式" value />
         <el-option label="提交审核" value="0" />
         <el-option label="手动审核" value="1" />
         <el-option label="手动审回" value="-1" />
@@ -40,11 +35,11 @@
 
       <el-select
         v-model="listQuery.isnn"
-        :placeholder="$t('角色选择')"
+        placeholder="角色选择"
         style="width: 100px"
         class="filter-item"
       >
-        <el-option label="全部角色" value="" />
+        <el-option label="全部角色" value />
         <el-option label="正式角色" value="0" />
         <el-option label="财务角色" value="1" />
       </el-select>
@@ -60,11 +55,11 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       />
-    
+
       <el-input
         v-model="listQuery.trano"
         prefix-icon="el-icon-search"
-        :placeholder="$t('会审订单号')"
+        placeholder="会审订单号"
         style="width: 130px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -73,25 +68,28 @@
       <el-input
         v-model="listQuery.trano_id"
         prefix-icon="el-icon-search"
-        :placeholder="$t('会审编号')"
+        placeholder="会审编号"
         style="width: 130px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-
 
       <el-input
         v-model="listQuery.username"
         prefix-icon="el-icon-search"
-        :placeholder="$t('请输入用户名')"
+        placeholder="请输入用户名"
         style="width: 130px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
 
-
-      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">{{ $t('查询') }}</el-button>
-
+      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">查询</el-button>
+      <span class="query-time">
+        查询时间设置 :
+        <el-select v-model="waitTime" placeholder="请选择" @change="handleChangeTime">
+          <el-option v-for="item in time" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </span>
     </div>
     <el-table
       :key="tableKey"
@@ -105,18 +103,30 @@
       size="mini"
       :header-cell-style="{color:'#606266'}"
     >
-      
-      <el-table-column :label="$t('提交审核人')"  align="center" prop="username"></el-table-column>
-      <el-table-column :label="$t('订单金额')"  align="center" prop="tradingamount"></el-table-column>
-      <el-table-column :label="$t('订单标题')"  align="center" prop="tradingtitle"></el-table-column>
-      <el-table-column :label="$t('订单归属人')"  align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column :label="$t('审核性质')"  align="center" prop="tjtype"></el-table-column>
-      <el-table-column :label="$t('订单备注')"  align="center" prop="tradingremark"></el-table-column>
-      <el-table-column :label="$t('订单状态')"  align="center" prop="tradingstate"></el-table-column>
-      <el-table-column :label="$t('提交审核人')"  align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column :label="$t('订单审核人')"  align="center" prop="tradingadmin"></el-table-column>
-      <el-table-column :label="$t('审核方式')"  align="center" prop="tradintype"></el-table-column>
-      <el-table-column :label="$t('订单时间')"  align="center" prop="tradingtrano">
+      <el-table-column label='提交审核人' align="center" prop="username"></el-table-column>
+      <el-table-column label='订单金额' align="center" prop="tradingamount"></el-table-column>
+      <el-table-column label='订单标题' align="center" prop="tradingtitle"></el-table-column>
+      <el-table-column label='订单归属人' align="center" prop="tradingworkname"></el-table-column>
+      <el-table-column label='审核性质' align="center" prop="tjtype"></el-table-column>
+      <el-table-column label='订单备注' align="center" prop="tradingremark"></el-table-column>
+      <el-table-column label='订单状态' align="center" prop="tradingstate" width="180">
+        <template slot-scope="scope">
+          <div v-if="scope.row.tradingstate == 0">
+            <el-button type="primary" @click="handleSubmit(scope.row)">确定</el-button>
+            <el-button type="primary" plain @click="handleCancle(scope.row)">取消</el-button>
+          </div>
+          <div v-else-if="scope.row.tradingstate == 1">
+            <el-button type="text">已审核</el-button>
+          </div>
+          <div v-else>
+            <el-button type="text" class="cancle">已取消</el-button>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label='提交审核人' align="center" prop="tradingworkname"></el-table-column>
+      <el-table-column label='订单审核人' align="center" prop="tradingadmin"></el-table-column>
+      <el-table-column label='审核方式' align="center" prop="tradintype"></el-table-column>
+      <el-table-column label='订单时间' align="center" prop="tradingtrano">
         <template slot-scope="scope">
           <span>{{ scope.row.oddtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
@@ -124,7 +134,7 @@
 
       <!--功能操作栏目--开始-->
       <el-table-column
-        :label="$t('操作')"
+        label='操作'
         align="center"
         width="100"
         class-name="small-padding fixed-width"
@@ -155,7 +165,11 @@
         <template>
           <el-tabs v-model="edittapname" type="card">
             <el-form-item label="管理账号 :" prop>
-              <el-input v-model="temp.username" :disabled="dialogStatus != 'add'" placeholder="只能为数字或字母，新增后不可修改" />
+              <el-input
+                v-model="temp.username"
+                :disabled="dialogStatus != 'add'"
+                placeholder="只能为数字或字母，新增后不可修改"
+              />
             </el-form-item>
             <el-form-item label="登录密码 :" prop="password">
               <el-input v-model="temp.password" type="password" placeholder="密码长度为6-12位字符" />
@@ -163,7 +177,7 @@
             <el-form-item label="安全码 :" prop="safecode">
               <el-input v-model="temp.safecode" type="password" placeholder="安全码长度为6-12数字" />
             </el-form-item>
-            <el-form-item label="用户姓名 :" prop="tip" >
+            <el-form-item label="用户姓名 :" prop="tip">
               <el-input v-model="temp.tip" placeholder="可选项" />
             </el-form-item>
             <el-form-item label="用户选择 :">
@@ -176,7 +190,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-radio-group v-model="temp.islock" >
+            <el-radio-group v-model="temp.islock">
               <el-radio-button :label="0">正常</el-radio-button>
               <el-radio-button :label="1">锁定</el-radio-button>
             </el-radio-group>
@@ -185,11 +199,11 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('取消') }}</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
           type="primary"
           @click="dialogStatus==='add'?addData():updateData()"
-        >{{ $t('确定') }}</el-button>
+        >确定</el-button>
       </div>
     </el-dialog>
 
@@ -199,7 +213,7 @@
         <el-table-column prop="pv" label="Pv" />
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">{{ $t('确定') }}</el-button>
+        <el-button type="primary" @click="dialogPvVisible = false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -236,6 +250,13 @@ export default {
   },
   data() {
     return {
+      time: [
+        { label: "5秒", value: 5 },
+        { label: "10秒", value: 10 },
+        { label: "15秒", value: 15 }
+      ],
+      timer: null,
+      waitTime: 0,
       tableKey: 0,
       list: null,
       total: 0,
@@ -283,44 +304,52 @@ export default {
     };
   },
   created() {
-    this.getRoleName();
     this.getList();
   },
   methods: {
-    getRoleName() {
-      this.$store.dispatch("system/actionAdminrolelist").then(res => {
-        this.roleNameList = res.data;
-      });
-    },
     getList() {
       this.listLoading = true;
       this.$store
-        .dispatch("system/actionAdminlis", this.listQuery)
+        .dispatch("trading/actionTradingList", this.listQuery)
         .then(response => {
           this.listLoading = false;
           this.list = response.data.items;
           this.total = response.data.total;
         });
     },
+    handleSubmit(row) {
+      let obj = {
+        tradingtrano: row.tradingtrano,
+        tradingstate: 1
+      };
+      this.$store.dispatch("trading/actionTranostate", obj).then(res => {
+        if ((res.code = 20000)) {
+          this.getList();
+        }
+      });
+    },
+    handleCancle(row) {
+      let obj = {
+        tradingtrano: row.tradingtrano,
+        tradingstate: -1
+      };
+      this.$store.dispatch("trading/actionTranostate", obj).then(res => {
+        if ((res.code = 20000)) {
+          this.getList();
+        }
+      });
+    },
+    handleChangeTime(e) {
+      clearInterval(this.timer);
+      this.timer = setInterval(()=>{
+        this.getList();
+      },this.waitTime*1000)
+    },
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
     },
-    handleAddAdmin() {
-      this.temp = {
-        role_id: "",
-        safecode: "",
-        password: "",
-        role_id: "",
-        username: "",
-        tip: ""
-      };
-      this.dialogStatus = "add";
-      this.dialogFormVisible = true;
-      this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
-      });
-    },
+
     handleUpdate(row) {
       this.temp = Object.assign({ ...row });
       this.dialogStatus = "update";
@@ -332,20 +361,18 @@ export default {
     addData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          this.$store
-            .dispatch("system/actionAdminadd", this.temp)
-            .then(res => {
-              if (res.code == 20000) {
-                this.dialogFormVisible = false;
-                this.$notify({
-                  title: "成功",
-                  message: "新增成功",
-                  type: "success",
-                  duration: 2000
-                });
-                this.getList();
-              }
-            });
+          this.$store.dispatch("system/actionAdminadd", this.temp).then(res => {
+            if (res.code == 20000) {
+              this.dialogFormVisible = false;
+              this.$notify({
+                title: "成功",
+                message: "新增成功",
+                type: "success",
+                duration: 2000
+              });
+              this.getList();
+            }
+          });
         }
       });
     },
@@ -372,3 +399,13 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.cancle {
+  color: #42b983;
+}
+.query-time {
+  font-size: 14px;
+  color: #666;
+  margin-left: 20px;
+}
+</style>

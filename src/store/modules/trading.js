@@ -1,4 +1,4 @@
-import { apiTradingList } from '@/api/trading'
+import { apiTradingList, apiTranostate } from '@/api/trading'
 
 const state = {
 }
@@ -12,6 +12,15 @@ const actions = {
     actionTradingList({ commit }, data) {
         return new Promise((resolve, reject) => {
             apiTradingList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionTranostate({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiTranostate(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

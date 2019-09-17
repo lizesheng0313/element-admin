@@ -7,3 +7,11 @@ export function apiTradingList(data) {
     data
   })
 }
+
+export function apiTranostate(data) {
+    return request({
+      url: '/index/trading/tranostate',
+      method: 'post',
+      data
+    })
+  }
