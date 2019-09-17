@@ -469,6 +469,12 @@ export const constantRoutes = [
         component: () => import('@/views/trading/target_center'),
         name: 'target_center',
         meta: { title: '指标订单',icon:'zip' }
+      },
+      {
+        path: 'sort',
+        component: () => import('@/views/trading/sort'),
+        name: 'sort',
+        meta: { title: '指标优推排序',icon:'zip' }
       }
     ]
   },
