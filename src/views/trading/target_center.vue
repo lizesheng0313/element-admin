@@ -3,15 +3,13 @@
   <div class="app-container">
     <div class="filter-container">
       <el-select
-        v-model="listQuery.updatedtime"
-        placeholder="更新"
+        v-model="waitTime"
+        placeholder="请选择"
+        @change="handleChangeTime"
         style="width: 75px"
         class="filter-item"
       >
-        <el-option label="15秒" value="15" />
-        <el-option label="30秒" value="30" />
-        <el-option label="60秒" value="60" />
-        <el-option label="静止" value="0" />
+        <el-option v-for="item in time" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
 
       <el-select v-model="listQuery.state" placeholder="状态" style="width: 93px" class="filter-item">
@@ -84,12 +82,6 @@
       />
 
       <el-button v-waves class="filter-item" type="primary" @click="handleFilter">查询</el-button>
-      <span class="query-time">
-        查询时间设置 :
-        <el-select v-model="waitTime" placeholder="请选择" @change="handleChangeTime">
-          <el-option v-for="item in time" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-      </span>
     </div>
     <el-table
       :key="tableKey"
@@ -103,13 +95,13 @@
       size="mini"
       :header-cell-style="{color:'#606266'}"
     >
-      <el-table-column label='提交审核人' align="center" prop="username"></el-table-column>
-      <el-table-column label='订单金额' align="center" prop="tradingamount"></el-table-column>
-      <el-table-column label='订单标题' align="center" prop="tradingtitle"></el-table-column>
-      <el-table-column label='订单归属人' align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column label='审核性质' align="center" prop="tjtype"></el-table-column>
-      <el-table-column label='订单备注' align="center" prop="tradingremark"></el-table-column>
-      <el-table-column label='订单状态' align="center" prop="tradingstate" width="180">
+      <el-table-column label="提交审核人" align="center" prop="username"></el-table-column>
+      <el-table-column label="订单金额" align="center" prop="tradingamount"></el-table-column>
+      <el-table-column label="订单标题" align="center" prop="tradingtitle"></el-table-column>
+      <el-table-column label="订单归属人" align="center" prop="tradingworkname"></el-table-column>
+      <el-table-column label="审核性质" align="center" prop="tjtype"></el-table-column>
+      <el-table-column label="订单备注" align="center" prop="tradingremark"></el-table-column>
+      <el-table-column label="订单状态" align="center" prop="tradingstate" width="180">
         <template slot-scope="scope">
           <div v-if="scope.row.tradingstate == 0">
             <el-button type="primary" @click="handleSubmit(scope.row)">确定</el-button>
@@ -123,22 +115,17 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label='提交审核人' align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column label='订单审核人' align="center" prop="tradingadmin"></el-table-column>
-      <el-table-column label='审核方式' align="center" prop="tradintype"></el-table-column>
-      <el-table-column label='订单时间' align="center" prop="tradingtrano">
+      <el-table-column label="提交审核人" align="center" prop="tradingworkname"></el-table-column>
+      <el-table-column label="订单审核人" align="center" prop="tradingadmin"></el-table-column>
+      <el-table-column label="审核方式" align="center" prop="tradintype"></el-table-column>
+      <el-table-column label="订单时间" align="center" prop="tradingtrano">
         <template slot-scope="scope">
           <span>{{ scope.row.oddtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 
       <!--功能操作栏目--开始-->
-      <el-table-column
-        label='操作'
-        align="center"
-        width="100"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" width="100" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button-group>
             <el-button @click="handleUpdate(row)">编辑</el-button>
@@ -200,10 +187,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='add'?addData():updateData()"
-        >确定</el-button>
+        <el-button type="primary" @click="dialogStatus==='add'?addData():updateData()">确定</el-button>
       </div>
     </el-dialog>
 
@@ -341,9 +325,9 @@ export default {
     },
     handleChangeTime(e) {
       clearInterval(this.timer);
-      this.timer = setInterval(()=>{
+      this.timer = setInterval(() => {
         this.getList();
-      },this.waitTime*1000)
+      }, this.waitTime * 1000);
     },
     handleFilter() {
       this.listQuery.page = 1;

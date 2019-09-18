@@ -1,4 +1,4 @@
-import { apiTradingList, apiTranostate,apiSortLists,apiSortChangeorder} from '@/api/trading'
+import { apiTradingList, apiTranostate,apiSortLists,apiSortChangeorder,apiChangestate,apiChangeinfo} from '@/api/trading'
 
 const state = {
 }
@@ -45,6 +45,26 @@ const actions = {
             })
         })
     },
+    actionChangestate({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiChangestate(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    actionChangeinfo({ commit }, data) {
+        return new Promise((resolve, reject) => {
+            apiChangeinfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    
+    
 }
 
 export default {

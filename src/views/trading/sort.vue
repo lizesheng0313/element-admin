@@ -3,9 +3,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-select
-        v-model="listQuery.updatedtime"
+        v-model="waitTime"
         placeholder="更新"
         style="width: 75px"
+        @change="handleChangeTime"
         class="filter-item"
       >
         <el-option label="15秒" value="15" />
@@ -97,25 +98,101 @@
       ref="dragTable"
     >
       <el-table-column label="ID" width="50" align="center" prop="id"></el-table-column>
-      <el-table-column label="提交审核人" align="center" prop="username"></el-table-column>
-      <el-table-column label="订单金额" align="center" prop="tradingamount"></el-table-column>
-      <el-table-column label="订单标题" align="center" prop="tradingtitle"></el-table-column>
-      <el-table-column label="订单归属人" align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column label="审核性质" align="center" prop="tjtype"></el-table-column>
-      <el-table-column label="订单备注" align="center" prop="tradingremark"></el-table-column>
-      <el-table-column label="提交审核人" align="center" prop="tradingworkname"></el-table-column>
-      <el-table-column label="订单审核人" align="center" prop="tradingadmin"></el-table-column>
-      <el-table-column label="审核方式" align="center" prop="tradintype"></el-table-column>
 
-      <!--功能操作栏目--开始-->
-      <el-table-column label="操作" align="center" width="100" class-name="small-padding fixed-width">
+      <el-table-column label="标识名称" align="center" prop="typetitle">
+        <template slot-scope="scope">
+          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.typetitle}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="标识" align="center" prop="type"></el-table-column>
+      <el-table-column label="标识标题" align="center" prop="ftitle"></el-table-column>
+      <el-table-column label="最低标额" align="center" prop="minmoney"></el-table-column>
+      <el-table-column label="最高标额" align="center" prop="maxmoney"></el-table-column>
+      <el-table-column label="标识备注" align="center" prop="remark"></el-table-column>
+      <el-table-column label="排序值" width="60" align="center" prop="listorder"></el-table-column>
+      <el-table-column label="拖拽排序" align="center" width="80">
+        <template slot-scope="{}">
+          <svg-icon class="drag-handler" icon-class="drag" />
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="是否在线"
+        align="center"
+        width="80"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="{row}">
+          <div v-if="row.isonline == -1">
+            <el-tag type="info" effect="dark">否</el-tag>
+          </div>
+          <div v-else-if="row.isonline == 1">
+            <el-tag type effect="dark">是</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button-group>
-            <el-button @click="handleUpdate(row)">编辑</el-button>
+            <el-radio-group v-model="row.state" @change="handleChangeState(row)">
+              <el-radio-button :label="1">启用</el-radio-button>
+              <el-radio-button :label="0">关闭</el-radio-button>
+            </el-radio-group>
           </el-button-group>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="450px" center="true" size="mini">
+      <el-form ref="dataForm" :model="temp" label-position="right" label-width="20%">
+        <template>
+          <el-form-item label="标识名称 :" prop="typetitle">
+            <el-input v-model="temp.typetitle" placeholder="请输入标识名称" />
+          </el-form-item>
+          <el-form-item label="标识 :" prop="type">
+            <el-input v-model="temp.type" placeholder="请输入标识" />
+          </el-form-item>
+          <el-form-item label="标识标题 :" prop="ftitle">
+            <el-input v-model="temp.ftitle" placeholder="请输入标识标题" />
+          </el-form-item>
+          <el-form-item label="最低标额 :" prop="minmoney">
+            <el-input v-model="temp.minmoney" placeholder="请输入最低标额" />
+          </el-form-item>
+          <el-form-item label="最高标额 :" prop="maxmoney">
+            <el-input v-model="temp.maxmoney" placeholder="请输入最高标额" />
+          </el-form-item>
+          <el-form-item label="标识备注 :" prop="remark">
+            <el-input v-model="temp.remark" placeholder="请输入标识备注" />
+          </el-form-item>
+          <el-form-item label="最高标额 :" prop="maxmoney">
+            <el-input v-model="temp.maxmoney" placeholder="请输入最高标额" />
+          </el-form-item>
+          <el-form-item label="是否在线 :" prop="isonline">
+            <el-radio-group v-model="temp.isonline">
+              <el-radio-button :label="-1">否</el-radio-button>
+              <el-radio-button :label="1">是</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="状态 :">
+            <el-checkbox v-model="temp.z1"></el-checkbox>
+            <el-checkbox v-model="temp.z2">z2</el-checkbox>
+            <el-checkbox v-model="temp.z3">z3</el-checkbox>
+            <el-checkbox v-model="temp.z4">z4</el-checkbox>
+            <el-checkbox v-model="temp.z5">z5</el-checkbox>
+            <el-checkbox v-model="temp.z6">z6</el-checkbox> 
+            <el-checkbox v-model="temp.z7">z7</el-checkbox>
+            <el-checkbox v-model="temp.z8">z8</el-checkbox>
+            <el-checkbox v-model="temp.z9">z9</el-checkbox>
+            <el-checkbox v-model="temp.z10">z10</el-checkbox>
+          </el-form-item>
+        </template>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="updateData">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -149,7 +226,9 @@ export default {
   },
   data() {
     return {
+      waitTime: 0,
       tableKey: 0,
+      timer: null,
       list: null,
       listLoading: true,
       roleNameList: [],
@@ -162,11 +241,7 @@ export default {
       },
       showReviewer: false,
       showlogintime: false,
-      temp: {
-        safecode: "",
-        password: "",
-        role_id: ""
-      },
+      temp: {},
       dialogFormVisible: false,
       dialogStatus: "",
       dialogPvVisible: false,
@@ -218,6 +293,17 @@ export default {
         }
       });
     },
+    handleChangeState(row) {
+      let obj = {
+        id: row.id,
+        state: row.state
+      };
+      this.$store.dispatch("trading/actionChangestate", obj).then(res => {
+        if ((res.code = 20000)) {
+          this.getList();
+        }
+      });
+    },
     handleChangeTime(e) {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
@@ -228,9 +314,9 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-
     handleUpdate(row) {
       this.temp = Object.assign({ ...row });
+      console.log(this.temp);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -240,7 +326,7 @@ export default {
     addData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          this.$store.dispatch("system/actionAdminadd", this.temp).then(res => {
+          this.$store.dispatch("trading/actionAdminadd", this.temp).then(res => {
             if (res.code == 20000) {
               this.dialogFormVisible = false;
               this.$notify({
@@ -259,7 +345,7 @@ export default {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$store
-            .dispatch("system/actionAdminedit", this.temp)
+            .dispatch("trading/actionChangeinfo", this.temp)
             .then(res => {
               if (res.code == 20000) {
                 this.dialogFormVisible = false;
@@ -293,5 +379,10 @@ export default {
   font-size: 14px;
   color: #666;
   margin-left: 20px;
+}
+.drag-handler {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 </style>

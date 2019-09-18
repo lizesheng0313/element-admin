@@ -30,3 +30,22 @@ export function apiSortChangeorder(data) {
         data
     })
 }
+export function apiChangestate(data) {
+    return request({
+        url: '/index/czc/changestate',
+        method: 'post',
+        data
+    })
+}
+
+export function apiChangeinfo(data) {
+    return request({
+        url: '/index/czc/changeinfo',
+        method: 'post',
+        data
+    })
+}
+
+
+
+
