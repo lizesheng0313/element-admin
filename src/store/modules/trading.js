@@ -1,4 +1,4 @@
-import { apiTradingList, apiTranostate,apiSortLists,apiSortChangeorder,apiChangestate,apiChangeinfo} from '@/api/trading'
+import { apiTradingList, apiTranostate, apiSortLists, apiSortChangeorder, apiChangestate, apiChangeinfo, apiTradingAdd,apiLooklists,apiLookMenu} from '@/api/trading'
 
 const state = {
 }
@@ -63,8 +63,17 @@ const actions = {
             })
         })
     },
+    actionTradingAdd({ commit }, data) {
+        return apiTradingAdd(data)
+    },
+    actionLookMenu({ commit }, data) {
+        return apiLookMenu(data)
+    },
+    actionLooklists({ commit }, data) {
+        return apiLooklists(data)
+    },
     
-    
+
 }
 
 export default {

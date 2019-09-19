@@ -2,89 +2,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select
-        v-model="waitTime"
-        placeholder="更新"
-        style="width: 75px"
-        @change="handleChangeTime"
-        class="filter-item"
-      >
-        <el-option label="15秒" value="15" />
-        <el-option label="30秒" value="30" />
-        <el-option label="60秒" value="60" />
-        <el-option label="静止" value="0" />
-      </el-select>
-
-      <el-select v-model="listQuery.state" placeholder="状态" style="width: 93px" class="filter-item">
-        <el-option label="全部" value />
-        <el-option label="未审核" value="0" />
-        <el-option label="已审核" value="1" />
-        <el-option label="已取消" value="-1" />
-      </el-select>
-
-      <el-select
-        v-model="listQuery.sdtype"
-        placeholder="审核方式"
-        style="width: 100px"
-        class="filter-item"
-      >
-        <el-option label="全部方式" value />
-        <el-option label="提交审核" value="0" />
-        <el-option label="手动审核" value="1" />
-        <el-option label="手动审回" value="-1" />
-      </el-select>
-
-      <el-select
-        v-model="listQuery.isnn"
-        placeholder="角色选择"
-        style="width: 100px"
-        class="filter-item"
-      >
-        <el-option label="全部角色" value />
-        <el-option label="正式角色" value="0" />
-        <el-option label="财务角色" value="1" />
-      </el-select>
-
-      <el-date-picker
-        v-model="listQuery.oddtime"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        :default-time="['00:00:00', '23:59:59']"
-        type="datetimerange"
-        :unlink-panels="true"
-        class="filter-item"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
-
-      <el-input
-        v-model="listQuery.trano"
-        prefix-icon="el-icon-search"
-        placeholder="会审订单号"
-        style="width: 130px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-
-      <el-input
-        v-model="listQuery.trano_id"
-        prefix-icon="el-icon-search"
-        placeholder="会审编号"
-        style="width: 130px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-
-      <el-input
-        v-model="listQuery.username"
-        prefix-icon="el-icon-search"
-        placeholder="请输入用户名"
-        style="width: 130px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-
-      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">查询</el-button>
+      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">刷新</el-button>
+      <el-button v-waves class="filter-item" type="primary" @click="handleAdd">新增</el-button>
     </div>
     <el-table
       row-key="id"
@@ -94,7 +13,6 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      height="600"
       ref="dragTable"
     >
       <el-table-column label="ID" width="50" align="center" prop="id"></el-table-column>
@@ -136,14 +54,15 @@
         <template slot-scope="{row}">
           <el-button-group>
             <el-radio-group v-model="row.state" @change="handleChangeState(row)">
-              <el-radio-button :label="1">启用</el-radio-button>
               <el-radio-button :label="0">关闭</el-radio-button>
+              <el-radio-button :label="1">启用</el-radio-button>
             </el-radio-group>
           </el-button-group>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="450px" center="true" size="mini">
+
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible" width="550px" center="true" size="mini">
       <el-form ref="dataForm" :model="temp" label-position="right" label-width="20%">
         <template>
           <el-form-item label="标识名称 :" prop="typetitle">
@@ -164,9 +83,13 @@
           <el-form-item label="标识备注 :" prop="remark">
             <el-input v-model="temp.remark" placeholder="请输入标识备注" />
           </el-form-item>
-          <el-form-item label="最高标额 :" prop="maxmoney">
-            <el-input v-model="temp.maxmoney" placeholder="请输入最高标额" />
+          <el-form-item label="centerurl :" prop="centerurl">
+            <el-input v-model="temp.center_url" placeholder="center_url" />
           </el-form-item>
+          <el-form-item label="html :" prop="html">
+            <el-input v-model="temp.html" placeholder="html" />
+          </el-form-item>
+
           <el-form-item label="是否在线 :" prop="isonline">
             <el-radio-group v-model="temp.isonline">
               <el-radio-button :label="-1">否</el-radio-button>
@@ -174,12 +97,12 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="状态 :">
-            <el-checkbox v-model="temp.z1"></el-checkbox>
+            <el-checkbox v-model="temp.z1">z1</el-checkbox>
             <el-checkbox v-model="temp.z2">z2</el-checkbox>
             <el-checkbox v-model="temp.z3">z3</el-checkbox>
             <el-checkbox v-model="temp.z4">z4</el-checkbox>
             <el-checkbox v-model="temp.z5">z5</el-checkbox>
-            <el-checkbox v-model="temp.z6">z6</el-checkbox> 
+            <el-checkbox v-model="temp.z6">z6</el-checkbox>
             <el-checkbox v-model="temp.z7">z7</el-checkbox>
             <el-checkbox v-model="temp.z8">z8</el-checkbox>
             <el-checkbox v-model="temp.z9">z9</el-checkbox>
@@ -190,7 +113,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="updateData">确定</el-button>
+        <el-button type="primary" @click="dialogStatus==='add'?createData():updateData()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -316,28 +239,45 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({ ...row });
-      console.log(this.temp);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs["dataForm"].clearValidate();
       });
     },
-    addData() {
+    handleAdd() {
+      this.temp = {
+        typetitle: "",
+        type: "",
+        ftitle: "",
+        minmoney: "",
+        maxmoney: "",
+        remark: "",
+        centerurl: "",
+        html: "",
+        isonline: "",
+        z1: true
+      };
+      this.dialogStatus = "add";
+      this.dialogFormVisible = true;
+    },
+    createData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          this.$store.dispatch("trading/actionAdminadd", this.temp).then(res => {
-            if (res.code == 20000) {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: "新增成功",
-                type: "success",
-                duration: 2000
-              });
-              this.getList();
-            }
-          });
+          this.$store
+            .dispatch("trading/actionTradingAdd", this.temp)
+            .then(res => {
+              if (res.code == 20000) {
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "成功",
+                  message: "新增成功",
+                  type: "success",
+                  duration: 2000
+                });
+                this.getList();
+              }
+            });
         }
       });
     },

@@ -46,6 +46,28 @@ export function apiChangeinfo(data) {
     })
 }
 
+export function apiTradingAdd(data) {
+    return request({
+        url: '/index/czc/add',
+        method: 'post',
+        data
+    })
+}
+
+export function apiLooklists(data) {
+    return request({
+        url: '/index/look/lists',
+        method: 'post',
+        data
+    })
+}
+
+export function apiLookMenu() {
+    return request({
+        url: 'index/look/menu',
+        method: 'post',
+    })
+}
 
 
 

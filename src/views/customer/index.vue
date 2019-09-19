@@ -502,9 +502,7 @@ export default {
     },
 
     handleUpdate(row) {
-      console.log(row);
       this.temp = row;
-      console.log(this.temp);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
       this.$nextTick(() => {

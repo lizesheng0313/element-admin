@@ -475,6 +475,12 @@ export const constantRoutes = [
         component: () => import('@/views/trading/sort'),
         name: 'sort',
         meta: { title: '指标优推排序',icon:'zip' }
+      },
+      {
+        path: 'look',
+        component: () => import('@/views/trading/look'),
+        name: 'look',
+        meta: { title: '监控指标',icon:'zip' }
       }
     ]
   },
