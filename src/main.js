@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
+import "@/assets/font/iconfont.css"
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 

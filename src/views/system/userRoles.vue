@@ -4,7 +4,7 @@
 
     <el-table
       :data="rolesList"
-       v-loading="listLoading"
+      v-loading="listLoading"
       style="width: 100%;margin-top:30px;"
       border
       :header-cell-style="{background:'#eef1f6',color:'#606266'}"
@@ -58,15 +58,17 @@
         <el-button type="primary" @click="confirmRole">{{ $t('permission.confirm') }}</el-button>
       </div>
     </el-dialog>
+    <chat-tool></chat-tool>
   </div>
 </template>
 
 <script>
+import ChatTool from "@/components/ChatTool";
 import { parseTime } from "@/utils";
 // import path from "path";
 // import i18n from "@/lang";
-
 export default {
+  components: { ChatTool },
   data() {
     return {
       listLoading: true,
