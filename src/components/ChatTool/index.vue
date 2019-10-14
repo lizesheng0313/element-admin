@@ -3,6 +3,9 @@
     <div
       class="chat-icon"
       :class="{'transtion':showTranstion}"
+      @touchstart="mobileStart"
+      @touchmove="mobileMove"
+      @touchend="mobileEnd"
       @mousedown="chatToolMove"
       v-show="isShowIframe"
       :style="{top:positionY+'px',left:positionX+'px'}"
@@ -24,7 +27,11 @@ export default {
       showTranstion: false,
       isShowIframe: true,
       positionX: 20,
-      positionY: 20
+      positionY: 20,
+      mobileX: "",
+      mobileY: "",
+      mobileOffsetX: "",
+      mobileOffsetY: ""
     };
   },
   methods: {
@@ -37,6 +44,32 @@ export default {
       setTimeout(() => {
         this.isShowIframe = false;
       }, 190);
+    },
+    mobileStart(e) {
+      let odiv = e.target; // 获取目标元素
+      // 算出鼠标相对元素的位置
+      this.mobileX = e.changedTouches[0].clientX;
+      this.mobileY = e.changedTouches[0].clientY;
+      this.mobileOffsetX = this.mobileX - this.positionX;
+      this.mobileOffsetY = this.mobileY - this.positionY;
+      console.log("开始", this.mobileX, this.mobileY);
+    },
+    mobileMove(e) {
+      let left = e.changedTouches[0].clientX - this.mobileOffsetX;
+      let top = e.changedTouches[0].clientY - this.mobileOffsetY;
+      this.positionX = left;
+      this.positionY = top;
+    },
+    mobileEnd(e) {
+      let x2 = e.changedTouches[0].clientX;
+      let y2 = e.changedTouches[0].clientY;
+      console.log(x2, y2);
+      if (this.mobileX == x2 && this.mobileY == y2) {
+        this.showTranstion = true;
+        setTimeout(() => {
+          this.isShowIframe = false;
+        }, 190);
+      }
     },
     chatToolMove(e) {
       let odiv = e.target; // 获取目标元素
@@ -104,7 +137,7 @@ export default {
     position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
+    bottom: 40px;
     left: 0;
     .chat-header {
       height: 35px;
